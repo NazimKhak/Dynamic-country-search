@@ -8,14 +8,24 @@ const refs = {
   countryList: document.querySelector('.country-list'),
   countryLInfo: document.querySelector('.country-info'),
 };
-
+refs.countryLInfo.classList.add('disable');
 refs.inputField.addEventListener(
   'input',
   debounce(displayCountries, DEBOUNCE_DELAY)
 );
 
 function displayCountries(ev) {
-  fetchcountries(ev.target.value);
+  let searchQuery = ev.target.value;
+
+  fetchcountries(searchQuery)
+    .then(countryInfo => createMarkup(countryInfo))
+    .catch(error => {
+      if (searchQuery === '') {
+        return;
+      }
+      Notiflix.Notify.failure('Oops, there is no country with that name');
+    });
+
   if (ev.target.value === '') {
     refs.countryLInfo.innerHTML = '';
     refs.countryList.innerHTML = '';
@@ -23,19 +33,27 @@ function displayCountries(ev) {
 }
 
 function createMarkup(information) {
+  if (information.length > 10) {
+    Notiflix.Notify.info(
+      'Too many matches found. Please enter a more specific name.'
+    );
+  }
+
   const html = information
     .map(element => {
       return `<li class='item'>
-          <img src='${element.flag}' width='30' heigth='30' alt='flag image' />
-          <p>${element.name}</p>
-          <p>${element.capital}</p>
-          <p>${element.languages[0].name}</p>
-        </li>`;
+            <img src='${element.flag}' width='40' heigth='30' alt='flag image' />
+            <p>${element.name}</p>
+            
+          </li>`;
     })
     .slice(0, 15)
     .join('');
-
+  refs.countryLInfo.innerHTML = '';
   refs.countryList.innerHTML = html;
+  refs.countryList.classList.remove('disable');
+  refs.countryLInfo.classList.add('disable');
+
   if (information.length === 1) {
     const htmloneElement = information
       .map(element => {
@@ -51,31 +69,17 @@ function createMarkup(information) {
       })
       .slice('')
       .join('');
+    refs.countryLInfo.classList.remove('disable');
+    refs.countryList.classList.add('disable');
     refs.countryLInfo.innerHTML = htmloneElement;
     refs.countryList.innerHTML = '';
   }
 }
 
 function fetchcountries(countryName) {
-  try {
-    fetch(
-      `https://restcountries.com/v2/name/${countryName}?fields=name,flag,capital,languages,population`
-    )
-      .then(response => {
-        return response.json();
-      })
-      .then(countryInfo => {
-        if (countryInfo.length > 10)
-          Notiflix.Notify.info(
-            'Too many matches found. Please enter a more specific name'
-          );
-        {
-          if (countryInfo.length < 10) {
-            createMarkup(countryInfo);
-          }
-        }
-      });
-  } catch (error) {
-    console.log('ОШИБКа');
-  }
+  return fetch(
+    `https://restcountries.com/v2/name/${countryName}?fields=name,flag,capital,languages,population`
+  ).then(response => {
+    return response.json();
+  });
 }

@@ -23,24 +23,56 @@ body {
 }
 
 .country-list {
-  gap: 30px;
+  padding-left: 0;
+  margin-left: 20;
+  margin-left: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+  .item {
+    max-width: 500px;
+    display: flex;
+    max-height: 30px;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+    background: white;
+    list-style: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.16);
+
+    padding: 18px;
+    text-transform: capitalize;
+  }
+  p {
+    font-weight: 600;
+  }
 }
 .disable {
   display: none;
 }
 .country-info {
-  height: 300px;
+  margin-left: 10px;
+  max-width: 400px;
+  max-height: 250px;
   align-items: center;
   gap: 20px;
+  list-style: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.16);
+
+  padding: 18px;
+  text-transform: capitalize;
 
   p {
-    margin: 5px;
+    margin: 0px;
   }
   span {
     font-weight: 700;
   }
+  h2 {
+    margin: 0;
+  }
 }
 .flag_country {
+  height: 50px;
   display: flex;
   align-items: center;
   gap: 10px;
