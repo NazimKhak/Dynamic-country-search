@@ -1,6 +1,6 @@
 import './sass/index.scss';
 import Notiflix from 'notiflix';
-
+import fetchcountries from './fetchfunctions.js';
 var debounce = require('lodash.debounce');
 const DEBOUNCE_DELAY = 300;
 const refs = {
@@ -74,12 +74,4 @@ function createMarkup(information) {
     refs.countryLInfo.innerHTML = htmloneElement;
     refs.countryList.innerHTML = '';
   }
-}
-
-function fetchcountries(countryName) {
-  return fetch(
-    `https://restcountries.com/v2/name/${countryName}?fields=name,flag,capital,languages,population`
-  ).then(response => {
-    return response.json();
-  });
 }
